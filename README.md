@@ -46,7 +46,7 @@ pip install -r requirements.txt
 Install Ollama, start its local server, and pull the model you want to use:
 
 ```bash
-ollama pull llama3
+ollama pull llama3.1:8b
 ollama serve
 ```
 
@@ -60,7 +60,7 @@ cp .env.example .env         # macOS/Linux
 Example `.env`:
 
 ```env
-OLLAMA_MODEL=llama3
+OLLAMA_MODEL=llama3.1:8b
 ```
 
 The application connects to `http://localhost:11434/v1`. The model must already
@@ -142,6 +142,24 @@ wording is important.
   added.
 - The output is an extraction aid, not a substitute for human review of policy
   wording, exclusions, sub-limits, and legal terms.
+
+## Final results
+
+Five out of five sample policies—`GHI_Policy.pdf` and `sample1.pdf` through
+`sample4.pdf`—were processed successfully end-to-end with no pipeline failures.
+
+Known extraction limitations from the sample run:
+
+- For some insurers' phrasing, `other_benefits` occasionally comes back as a
+  flat list of key-value pairs instead of the nested canonical schema. This is
+  logged as a warning and gracefully skipped rather than crashing the pipeline.
+- A handful of insurer-specific fields outside the canonical schema, such as
+  `Maternity_Claims`, `Proposal_Acceptance`, and `Policy_Details`, are similarly
+  logged as unexpected fields and skipped; they are not silently dropped.
+- The solution deliberately uses the local Ollama model `llama3.1:8b` rather
+  than a paid API because of resource constraints. This saves API cost and
+  keeps policy data local, but is a tradeoff: nested-field extraction can be
+  less consistent than with frontier API models.
 
 ## Tests
 
