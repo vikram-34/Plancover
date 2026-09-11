@@ -1,0 +1,220 @@
+{
+  "insurer_name": null,
+  "tpa_name": null,
+  "policy_period": {
+    "start_date": null,
+    "end_date": null
+  },
+  "tenure": null,
+  "policy_type": null,
+  "total_premium": null,
+  "total_sum_insured": null,
+  "previous_year_premium": null,
+  "family_structure": {
+    "employee": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "maximum_members": null
+    },
+    "spouse": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "maximum_members": null
+    },
+    "children": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "maximum_members": null
+    },
+    "parents": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "maximum_members": null
+    },
+    "parents_in_law": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "maximum_members": null
+    }
+  },
+  "sum_insured_tiers": [],
+  "demographics_counts": {
+    "employees": null,
+    "spouses": null,
+    "children": null,
+    "parents": null,
+    "parents_in_law": null,
+    "male": null,
+    "female": null,
+    "other": null,
+    "notes": null
+  },
+  "total_lives_covered": null,
+  "room_rent": {
+    "status": null,
+    "limit": null,
+    "notes": null,
+    "percent_of_sum_insured": null,
+    "max_limit": null
+  },
+  "icu_charges": {
+    "status": null,
+    "limit": null,
+    "notes": null,
+    "percent_of_sum_insured": null,
+    "max_limit": null
+  },
+  "hospitalization_periods": {
+    "pre_hospitalization_days": null,
+    "post_hospitalization_days": null,
+    "notes": null
+  },
+  "maternity": {
+    "waiting_period_status": null,
+    "waiting_period_conditions": null,
+    "baby_day_one_cover": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "vaccination_coverage": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "normal_delivery_limits": {
+      "metro": null,
+      "non_metro": null,
+      "notes": null
+    },
+    "c_section_limits": {
+      "metro": null,
+      "non_metro": null,
+      "notes": null
+    },
+    "notes": null
+  },
+  "waiting_periods": {
+    "initial_30_day": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "conditions": null
+    },
+    "first_year": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "conditions": null
+    },
+    "second_year": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "conditions": null
+    },
+    "pre_existing_disease": {
+      "status": null,
+      "limit": null,
+      "notes": null,
+      "conditions": null
+    }
+  },
+  "other_benefits": {
+    "day_care": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "opd": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "teleconsultation": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "pharmacy_discount": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "domiciliary_hospitalization": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "annual_health_checkup": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "modern_treatment": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "bariatric_treatment": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "psychiatric_treatment": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "ayush_treatment": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "lgbtq_plus_coverage": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "live_in_partner_coverage": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    },
+    "organ_donor_expenses": {
+      "status": null,
+      "limit": null,
+      "notes": null
+    }
+  },
+  "infertility_surrogacy": {
+    "status": null,
+    "limit": null,
+    "notes": null
+  },
+  "ambulance": {
+    "status": null,
+    "limit": null,
+    "notes": null
+  },
+  "air_ambulance": {
+    "status": null,
+    "limit": null,
+    "notes": null
+  },
+  "corporate_buffer_limit": {
+    "status": null,
+    "limit": null,
+    "notes": null
+  },
+  "disease_wise_capping": {
+    "status": null,
+    "limit": null,
+    "notes": null
+  }
+}

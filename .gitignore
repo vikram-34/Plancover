@@ -32,10 +32,6 @@ ENV/
 .env.*
 !.env.example
 
-# Generated extraction output
-output/
-!output/.gitkeep
-
 # Local policy PDFs (may contain confidential information)
 sample_docs/*.pdf
 
