@@ -3,3 +3,4 @@ pymupdf
 openai
 python-dotenv
 pydantic
+python-dateutil

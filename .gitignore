@@ -36,6 +36,9 @@ ENV/
 output/
 !output/.gitkeep
 
+# Local policy PDFs (may contain confidential information)
+sample_docs/*.pdf
+
 # Test and tooling caches
 .pytest_cache/
 .mypy_cache/
