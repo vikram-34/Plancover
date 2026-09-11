@@ -1,0 +1,5 @@
+pdfplumber
+pymupdf
+openai
+python-dotenv
+pydantic
