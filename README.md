@@ -50,6 +50,10 @@ are particularly likely to contain numbers that resemble the aggregate sum
 insured. Deterministic overrides take precedence when the source contains a
 clearly labelled policy-schedule date or aggregate sum insured.
 
+## Live Demo
+
+[Open Plancover](https://plancover.onrender.com/)
+
 # TECHNOLOGIES USED
 
 - Python 3.10+
