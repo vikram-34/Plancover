@@ -86,12 +86,12 @@ billing is required for the free-tier setup. Configure `.env` as follows:
 
 ```env
 GEMINI_API_KEY=your_key_here
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.6-flash
 ```
 
 `GEMINI_MODEL` is optional; the client uses its built-in default when it is not
 set. Some newer preview models have very low daily quotas, sometimes around 20
-requests per day. `gemini-2.5-flash` is recommended as the stable default when
+requests per day. `gemini-3.6-flash` is recommended as the stable default when
 it is available for the account.
 
 ## Optional Ollama development setup
