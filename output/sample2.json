@@ -1,50 +1,51 @@
 {
-  "insurer_name": null,
+  "insurer_name": "Liberty General Insurance Limited",
   "tpa_name": null,
+  "extraction_status": "succeeded",
+  "extraction_evidence": {
+    "tenure": [
+      {
+        "page": 1,
+        "snippet": "nsurance:\nFrom\n00:00 Hrs of  02/06/2022\nTo Midnight\n23:59 Hrs of  01/06/2023  \nPolicy Type:\nIndividual\nPolicy Tenure:\n1 Year(s)\nBusiness Type:\nRenewal Business\nProposal:\nIndividual >1 member with separate SI\nIndustry:\nIT & ITE"
+      }
+    ],
+    "total_premium": [
+      {
+        "page": 1,
+        "snippet": "sed by the Liberty General Insurance Limited under license.\nCo-Insurance Details\nCoverage Details\nSchedule of Premium\nSpecial Conditions\nLIBERTY GROUP PERSONAL ACCIDENT POLICY \n- POLICY SCHEDULE\nPolicy Issuing Office:\n10th Floo"
+      },
+      {
+        "page": 2,
+        "snippet": "pany.\n3. Adequate Cash Deposit (CD) Balance is required to be maintained at all times to ensure that adequate premium is available for inclusion of member/s as applicable.\n4. Commencement Date of Cover: It is hereby declared an"
+      }
+    ]
+  },
   "policy_period": {
-    "start_date": null,
-    "end_date": null
+    "start_date": "2022-02-06",
+    "end_date": "2023-01-06"
   },
-  "tenure": null,
-  "policy_type": null,
-  "total_premium": null,
-  "total_sum_insured": null,
-  "previous_year_premium": null,
+  "tenure": "1 Year(s)",
+  "policy_type": "Individual",
+  "total_premium": "Rs.11328.00",
+  "total_sum_insured": "24000000",
+  "previous_year_premium": "Not Found",
   "family_structure": {
-    "employee": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "spouse": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "children": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents_in_law": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    }
+    "employee": "Covered, Adult aged 18 to 65 years, fixed CSI of Rs. 5 Lakh per employee",
+    "spouse": "Not Found",
+    "children": "Not Found",
+    "parents": "Not Found",
+    "parents_in_law": "Not Found"
   },
-  "sum_insured_tiers": [],
+  "sum_insured_tiers": [
+    {
+      "name": "Group1",
+      "amount": "Rs. 5 Lakh",
+      "eligible_members": "48 insured persons",
+      "notes": "Accidental Death, Permanent Total Disability, Permanent Partial Disability, Temporary Total Disability"
+    }
+  ],
   "demographics_counts": {
-    "employees": null,
+    "employees": 48,
     "spouses": null,
     "children": null,
     "parents": null,
@@ -52,169 +53,49 @@
     "male": null,
     "female": null,
     "other": null,
-    "notes": null
+    "notes": "Not Found"
   },
-  "total_lives_covered": null,
-  "room_rent": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
-  "icu_charges": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
+  "total_lives_covered": 48,
+  "room_rent": "Not Found",
+  "icu_charges": "Not Found",
   "hospitalization_periods": {
     "pre_hospitalization_days": null,
     "post_hospitalization_days": null,
-    "notes": null
+    "notes": "Not Found"
   },
   "maternity": {
-    "waiting_period_status": null,
-    "waiting_period_conditions": null,
-    "baby_day_one_cover": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "vaccination_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "normal_delivery_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "c_section_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "notes": null
+    "waiting_period_status": "Not Found",
+    "waiting_period_conditions": "Not Found",
+    "baby_day_one_cover": "Not Found",
+    "vaccination_coverage": "Not Found",
+    "normal_delivery_limits": "Not Found",
+    "c_section_limits": "Not Found",
+    "notes": "Not Found"
   },
   "waiting_periods": {
-    "initial_30_day": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "first_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "second_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "pre_existing_disease": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    }
+    "initial_30_day": "Not Found",
+    "first_year": "Not Found",
+    "second_year": "Not Found",
+    "pre_existing_disease": "Not Found"
   },
   "other_benefits": {
-    "day_care": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "opd": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "teleconsultation": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "pharmacy_discount": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "domiciliary_hospitalization": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "annual_health_checkup": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "modern_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "bariatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "psychiatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "ayush_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "lgbtq_plus_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "live_in_partner_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "organ_donor_expenses": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    }
+    "day_care": "Not Found",
+    "opd": "Not Found",
+    "teleconsultation": "Not Found",
+    "pharmacy_discount": "Not Found",
+    "domiciliary_hospitalization": "Not Found",
+    "annual_health_checkup": "Not Found",
+    "modern_treatment": "Not Found",
+    "bariatric_treatment": "Not Found",
+    "psychiatric_treatment": "Not Found",
+    "ayush_treatment": "Not Found",
+    "lgbtq_plus_coverage": "Not Found",
+    "live_in_partner_coverage": "Not Found",
+    "organ_donor_expenses": "Not Found"
   },
-  "infertility_surrogacy": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "air_ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "corporate_buffer_limit": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "disease_wise_capping": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  }
+  "infertility_surrogacy": "Not Found",
+  "ambulance": "Not Found",
+  "air_ambulance": "Not Found",
+  "corporate_buffer_limit": "Not Found",
+  "disease_wise_capping": "Not Found"
 }

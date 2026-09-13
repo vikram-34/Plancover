@@ -1,6 +1,8 @@
 pdfplumber
 pymupdf
-openai
+google-genai
 python-dotenv
 pydantic
 python-dateutil
+pillow
+pytesseract

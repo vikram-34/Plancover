@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 from dataclasses import dataclass, field
 from datetime import date
@@ -21,8 +22,9 @@ from pydantic import ValidationError
 from pydantic import BaseModel
 from dateutil import parser as date_parser
 
+from .detect_insurer import identify_policy_parties
 from .ingest import IngestionResult, PageContent, ingest_pdf
-from .llm_client import OllamaLLMClient
+from .llm_client import GeminiLLMClient
 from .schema import GMCPPolicy
 
 
@@ -58,7 +60,9 @@ class ExtractionResult:
     policy: Optional[GMCPPolicy]
     group_payloads: dict[str, dict[str, Any]] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
     alias_mappings: dict[str, dict[str, int]] = field(default_factory=dict)
+    evidence: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
 
 
 # These are conceptual insurance terms, not insurer-specific templates.  Related
@@ -185,6 +189,49 @@ EXTRACTION_GROUPS: tuple[ExtractionGroup, ...] = (
 )
 
 
+DOCUMENT_GROUPS: tuple[ExtractionGroup, ...] = (
+    ExtractionGroup(
+        name="policy_core",
+        fields=(
+            "policy_period",
+            "tenure",
+            "policy_type",
+            "total_premium",
+            "total_sum_insured",
+            "previous_year_premium",
+            "family_structure",
+            "sum_insured_tiers",
+            "demographics_counts",
+            "total_lives_covered",
+        ),
+        keywords=(),
+    ),
+    ExtractionGroup(
+        name="coverage_and_waiting",
+        fields=(
+            "room_rent",
+            "icu_charges",
+            "hospitalization_periods",
+            "maternity",
+            "waiting_periods",
+        ),
+        keywords=(),
+    ),
+    ExtractionGroup(
+        name="benefits_and_limits",
+        fields=(
+            "other_benefits",
+            "infertility_surrogacy",
+            "ambulance",
+            "air_ambulance",
+            "corporate_buffer_limit",
+            "disease_wise_capping",
+        ),
+        keywords=(),
+    ),
+)
+
+
 class GMCExtractor:
     """Extract a validated GMC policy record using targeted LLM calls."""
 
@@ -197,7 +244,7 @@ class GMCExtractor:
         max_prompt_characters: int = 30_000,
     ) -> None:
         self._client = client
-        # Passing None lets OllamaLLMClient read OLLAMA_MODEL from .env.
+        # Passing None lets GeminiLLMClient read GEMINI_MODEL from .env.
         self.model = model
         self.pages_per_fallback_chunk = pages_per_fallback_chunk
         self.max_prompt_characters = max_prompt_characters
@@ -208,60 +255,111 @@ class GMCExtractor:
         return self.extract(ingest_pdf(pdf_path))
 
     def extract(self, document: IngestionResult) -> ExtractionResult:
-        """Extract one complete policy in one call, with one optional repair call."""
+        """Extract a policy through three smaller, schema-scoped LLM calls."""
 
         errors: list[str] = []
         alias_mappings: dict[str, dict[str, int]] = {}
-        skeleton = policy_skeleton()
+        group_payloads: dict[str, dict[str, Any]] = {}
+        merged: dict[str, Any] = {}
         document_text = render_full_document(document)
         client = self._get_client()
-        prompt = build_full_policy_prompt(document_text, skeleton)
+
+        for group in DOCUMENT_GROUPS:
+            skeleton = group_skeleton(group.fields)
+            prompt = build_group_document_prompt(group, document_text, skeleton)
+            try:
+                payload = client.complete_json(
+                    prompt,
+                    instructions=FULL_POLICY_INSTRUCTIONS,
+                    schema=group_json_schema(group),
+                    max_attempts=2,
+                )
+                raw_response = getattr(client, "last_raw_response", None)
+                _print_raw_response(group.name, raw_response, payload)
+                if not isinstance(payload, dict):
+                    raise ValueError("LLM response must be a JSON object")
+                payload = unwrap_group_payload(payload, group)
+                payload = normalize_group_keys(payload, group.fields, alias_mappings)
+                payload = normalize_payload_values(payload, group.fields, alias_mappings)
+                payload = normalize_not_found(payload)
+                unexpected_fields = set(payload) - set(group.fields)
+                if unexpected_fields:
+                    logger.warning(
+                        "Ignoring unexpected fields in %s response: %s",
+                        group.name,
+                        sorted(unexpected_fields),
+                    )
+                    payload = {key: value for key, value in payload.items() if key in group.fields}
+                group_payloads[group.name] = payload
+                merged.update(payload)
+                missing_fields = _missing_group_fields(payload, group.fields)
+                if missing_fields:
+                    retry_prompt = build_missing_fields_prompt(
+                        group, document_text, missing_fields
+                    )
+                    retry_payload = client.complete_json(
+                        retry_prompt,
+                        instructions=FULL_POLICY_INSTRUCTIONS,
+                        schema=group_json_schema(group),
+                        max_attempts=2,
+                    )
+                    if not isinstance(retry_payload, dict):
+                        raise ValueError("LLM retry response must be a JSON object")
+                    retry_payload = unwrap_group_payload(retry_payload, group)
+                    retry_payload = normalize_group_keys(
+                        retry_payload, group.fields, alias_mappings
+                    )
+                    retry_payload = normalize_payload_values(
+                        retry_payload, group.fields, alias_mappings
+                    )
+                    retry_payload = normalize_not_found(retry_payload)
+                    for field_name in missing_fields:
+                        retry_value = retry_payload.get(field_name)
+                        if _has_meaningful_value(retry_value):
+                            payload[field_name] = retry_value
+                            merged[field_name] = retry_value
+                    group_payloads[group.name] = payload
+            except Exception as exc:
+                message = f"{group.name} extraction failed: {exc}"
+                logger.warning(message)
+                errors.append(message)
+
+        _apply_schedule_evidence(merged, document)
 
         try:
-            raw_payload = client.complete_json(
-                prompt,
-                instructions=FULL_POLICY_INSTRUCTIONS,
-                schema=GMCPPolicy.model_json_schema(),
-                max_attempts=1,
-            )
-        except Exception as exc:
-            raw_payload = None
-            errors.append(f"Initial document extraction failed: {exc}")
-            logger.warning(errors[-1])
+            policy = GMCPPolicy.model_validate(merged)
+        except ValidationError as exc:
+            message = f"Final GMC policy validation failed: {exc}"
+            logger.error(message)
+            errors.append(message)
+            policy = None
 
-        policy = None
-        if isinstance(raw_payload, dict):
-            policy = normalize_and_validate_policy(raw_payload, alias_mappings)
-            if policy is None:
-                errors.append("Initial document response failed policy validation")
+        warnings: list[str] = []
+        if policy is not None:
+            populated, total = populated_top_level_fields(policy)
+            message = f"Only {populated}/{total} top-level fields populated"
+            logger.warning(message)
+            warnings.append(message)
 
-        if policy is None:
-            raw_output = getattr(client, "last_raw_response", None)
-            if raw_output is None:
-                raw_output = json.dumps(raw_payload, ensure_ascii=False, default=str)
-            repair_prompt = build_repair_prompt(document_text, skeleton, raw_output)
-            try:
-                repaired_payload = client.complete_json(
-                    repair_prompt,
-                    instructions=FULL_POLICY_INSTRUCTIONS,
-                    schema=GMCPPolicy.model_json_schema(),
-                    max_attempts=1,
-                )
-                policy = normalize_and_validate_policy(repaired_payload, alias_mappings)
-                if policy is None:
-                    errors.append("Repair response failed policy validation")
-            except Exception as exc:
-                errors.append(f"Repair extraction failed: {exc}")
-                logger.warning(errors[-1])
+        evidence = build_field_evidence(policy or GMCPPolicy(), document)
 
-        if policy is None:
-            logger.error("Final GMC policy validation failed after initial and repair attempts")
         return ExtractionResult(
             policy=policy,
-            group_payloads={"document": raw_payload} if isinstance(raw_payload, dict) else {},
+            group_payloads=group_payloads,
             errors=errors,
+            warnings=warnings,
             alias_mappings=alias_mappings,
+            evidence=evidence,
         )
+
+    def identify_insurer_tpa(self, document: IngestionResult) -> dict[str, Optional[str]]:
+        """Use a small LLM call over the opening pages to identify insurer and TPA."""
+
+        client = self._get_client()
+        parties = identify_policy_parties(document, client)
+        raw_response = getattr(client, "last_raw_response", None)
+        _print_raw_response("insurer_tpa", raw_response, parties)
+        return parties
 
     def _extract_group(
         self,
@@ -298,7 +396,7 @@ class GMCExtractor:
     def _get_client(self) -> Any:
         if self._client is not None:
             return self._client
-        self._client = OllamaLLMClient(model=self.model)
+        self._client = GeminiLLMClient(model=self.model)
         return self._client
 
 
@@ -308,10 +406,230 @@ def policy_skeleton() -> dict[str, Any]:
     return GMCPPolicy().model_dump(mode="json")
 
 
+def group_skeleton(fields: Sequence[str]) -> dict[str, Any]:
+    """Return only the requested top-level fields from the full policy skeleton."""
+
+    full_skeleton = policy_skeleton()
+    return {field_name: full_skeleton[field_name] for field_name in fields}
+
+
+def _missing_group_fields(payload: dict[str, Any], fields: Sequence[str]) -> list[str]:
+    """Return fields that are absent or still contain only schema defaults."""
+
+    defaults = group_skeleton(fields)
+    return [
+        field_name
+        for field_name in fields
+        if not _has_meaningful_value(payload.get(field_name, defaults[field_name]))
+    ]
+
+
+def build_missing_fields_prompt(
+    group: ExtractionGroup, document_text: str, missing_fields: Sequence[str]
+) -> str:
+    """Ask a second pass to recover only fields left empty by the first pass."""
+
+    skeleton = group_skeleton(missing_fields)
+    return f"""Recheck this GMC policy only for these missing fields: {list(missing_fields)}.
+
+Return one JSON object containing exactly those fields and the same nested shape
+shown below. Search every page carefully, including tables, footnotes, exclusions,
+and schedule sections. Use only direct evidence. Use \"{NOT_FOUND}\" when the
+field is genuinely absent; never guess or overwrite source wording.
+
+Exact JSON skeleton:
+{json.dumps(skeleton, ensure_ascii=False, indent=2)}
+
+Complete extracted document text:
+{document_text or "No extracted text or tables were available."}
+"""
+
+
+def unwrap_group_payload(payload: dict[str, Any], group: ExtractionGroup) -> dict[str, Any]:
+    """Unwrap the harmless group-name envelope often added by local models."""
+
+    if set(payload) == {group.name} and isinstance(payload[group.name], dict):
+        logger.warning("Unwrapped local-model %s response envelope.", group.name)
+        return payload[group.name]
+
+    unwrapped = dict(payload)
+    for field_name in group.fields:
+        field_value = unwrapped.get(field_name)
+        if isinstance(field_value, dict) and set(field_value) == {group.name}:
+            logger.warning("Unwrapped %s envelope inside %s.", group.name, field_name)
+            unwrapped[field_name] = field_value[group.name]
+    return unwrapped
+
+
 def render_full_document(document: IngestionResult) -> str:
     """Render all extracted pages and tables without section filtering."""
 
     return "\n\n".join(_render_page(page) for page in document.pages)
+
+
+_SCHEDULE_DATE_PATTERNS: dict[str, tuple[str, ...]] = {
+    "start_date": (
+        "date and time of policy commencement",
+        "commencement date",
+        "policy start date",
+        "policy period start date",
+    ),
+    "end_date": (
+        "date and time of policy expiry",
+        "expiry date",
+        "policy end date",
+        "policy period end date",
+    ),
+}
+_POLICY_DATE_PATTERN = re.compile(
+    r"\b(?:\d{1,2}[-/](?:\d{1,2}|[A-Za-z]{3,9})[-/]\d{4}|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})\b"
+)
+_AGGREGATE_SUM_INSURED_PATTERN = re.compile(r"aggregate\s+sum\s+insured", re.IGNORECASE)
+_MONEY_CANDIDATE_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9])(?:INR|Rs\.?\s*)?(\d{1,3}(?:,\d{2,3})+|\d{5,}(?:\.\d+)?)"
+)
+
+
+def _apply_schedule_evidence(payload: dict[str, Any], document: IngestionResult) -> None:
+    """Prefer explicitly labelled schedule values over ambiguous model guesses.
+
+    These generic labels occur across insurers and are extracted only when the
+    PDF text directly associates a nearby value with the label. This avoids
+    confusing an aggregate SI with an age-band or premium-rate figure.
+    """
+
+    period = payload.get("policy_period")
+    if not isinstance(period, dict):
+        period = {}
+        payload["policy_period"] = period
+
+    for field_name, labels in _SCHEDULE_DATE_PATTERNS.items():
+        date_value = _find_schedule_date(document.pages, labels)
+        if date_value:
+            if period.get(field_name) != date_value:
+                logger.info("Using labelled policy-schedule %s: %s", field_name, date_value)
+            period[field_name] = date_value
+
+    aggregate_sum_insured = _find_aggregate_sum_insured(document.pages)
+    if aggregate_sum_insured:
+        if payload.get("total_sum_insured") != aggregate_sum_insured:
+            logger.info(
+                "Using labelled Aggregate Sum Insured instead of model-selected value: %s",
+                aggregate_sum_insured,
+            )
+        payload["total_sum_insured"] = aggregate_sum_insured
+
+
+def _find_schedule_date(pages: Sequence[PageContent], labels: Sequence[str]) -> str | None:
+    for page in pages:
+        lines = [line.strip() for line in page.raw_text.splitlines() if line.strip()]
+        for index, line in enumerate(lines):
+            if not any(label in line.casefold() for label in labels):
+                continue
+            for candidate_line in lines[index + 1 : index + 6]:
+                match = _POLICY_DATE_PATTERN.search(candidate_line)
+                if match:
+                    parsed = _parse_policy_date(match.group(0), "policy_schedule")
+                    if parsed:
+                        return parsed
+    return None
+
+
+def _find_aggregate_sum_insured(pages: Sequence[PageContent]) -> str | None:
+    for page in pages:
+        for label_match in _AGGREGATE_SUM_INSURED_PATTERN.finditer(page.raw_text):
+            nearby_text = page.raw_text[label_match.end() : label_match.end() + 2_000]
+            candidates: list[tuple[float, str]] = []
+            for money_match in _MONEY_CANDIDATE_PATTERN.finditer(nearby_text):
+                candidate = money_match.group(1)
+                numeric_value = float(candidate.replace(",", ""))
+                if 100_000 <= numeric_value <= 1_000_000_000:
+                    candidates.append((numeric_value, candidate))
+            if candidates:
+                return max(candidates, key=lambda item: item[0])[1]
+    return None
+
+
+def build_group_document_prompt(
+    group: ExtractionGroup, document_text: str, skeleton: dict[str, Any]
+) -> str:
+    """Build a compact full-document prompt for one logical schema slice."""
+
+    sum_insured_instruction = ""
+    if "total_sum_insured" in group.fields:
+        sum_insured_instruction = (
+            "\nFor `total_sum_insured`, extract only the Aggregate Sum Insured or "
+            "Total Sum Insured stated in the policy schedule. Do NOT use a figure "
+            "from a premium-rate table, premium-rater table, age-band table, or "
+            "individual rate band.\n"
+        )
+
+    return f"""Extract only the `{group.name}` section from this GMC policy.
+
+Copy this exact JSON structure. Replace only placeholder values with policy data.
+Keep every key exactly as shown, including nested keys. Do not rename, add,
+remove, or flatten keys. Coverage and family-relation values in this skeleton
+are flat strings: write one concise source-faithful description containing the
+coverage status, limit, and conditions together. Use "Not Found" only when no
+direct evidence exists. Preserve monetary limits, percentages, and day counts
+verbatim.
+{sum_insured_instruction}
+
+Exact JSON skeleton:
+{json.dumps(skeleton, ensure_ascii=False, indent=2)}
+
+Complete extracted document text:
+{document_text or "No extracted text or tables were available."}
+"""
+
+
+def populated_top_level_fields(policy: GMCPPolicy) -> tuple[int, int]:
+    """Count top-level fields that contain a meaningful, non-default value."""
+
+    payload = policy.model_dump(mode="json")
+    payload.pop("extraction_status", None)
+    payload.pop("extraction_evidence", None)
+    populated = sum(_has_meaningful_value(value) for value in payload.values())
+    return populated, len(payload)
+
+
+def _has_meaningful_value(value: Any) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, dict):
+        return any(_has_meaningful_value(item) for item in value.values())
+    if isinstance(value, list):
+        return any(_has_meaningful_value(item) for item in value)
+    if isinstance(value, str):
+        return bool(value.strip()) and value.strip().casefold() != NOT_FOUND.casefold()
+    return True
+
+
+def build_field_evidence(
+    policy: GMCPPolicy, document: IngestionResult, *, snippet_characters: int = 220
+) -> dict[str, list[dict[str, Any]]]:
+    """Attach nearby source snippets to populated fields for human verification."""
+
+    evidence: dict[str, list[dict[str, Any]]] = {}
+    policy_payload = policy.model_dump(mode="json")
+    for field_name, value in policy_payload.items():
+        if field_name in {"extraction_status", "extraction_evidence"} or not _has_meaningful_value(value):
+            continue
+        terms = (field_name.replace("_", " "),) + EXPLICIT_ALIASES.get(field_name, ())
+        matches: list[dict[str, Any]] = []
+        for page in document.pages:
+            lower_text = page.raw_text.casefold()
+            for term in terms:
+                position = lower_text.find(term.casefold())
+                if position < 0:
+                    continue
+                start = max(0, position - snippet_characters // 2)
+                end = min(len(page.raw_text), position + len(term) + snippet_characters // 2)
+                matches.append({"page": page.page_number, "snippet": page.raw_text[start:end].strip()})
+                break
+        if matches:
+            evidence[field_name] = matches[:3]
+    return evidence
 
 
 def build_full_policy_prompt(document_text: str, skeleton: dict[str, Any]) -> str:
@@ -467,11 +785,11 @@ explanations, or fields from another group.
 Evidence rules:
 - Use only the supplied policy pages and tables; never infer, calculate, or guess.
 - When information is absent, write exactly \"{NOT_FOUND}\" in that value rather
-  than guessing. The calling code will normalise this sentinel before validation.
+  than guessing.
 - Preserve currency amounts, monetary limits, percentages, and day counts verbatim
   from the source; do not paraphrase or convert them.
-- For coverage benefits, preserve `status`, `limit`, and `notes`. Use the exact
-  allowed status wording when the policy establishes it.
+- Coverage and family-relation fields are single strings. Combine status, limit,
+  and conditions in source-faithful wording; do not create nested objects.
 
 Pydantic-derived JSON schema:
 {json.dumps(schema, ensure_ascii=False)}
@@ -482,20 +800,25 @@ Relevant policy evidence:
 
 
 def normalize_not_found(value: Any) -> Any:
-    """Convert the explicit no-evidence sentinel to ``None`` for Pydantic validation."""
+    """Retain the explicit no-evidence sentinel used by flat coverage fields."""
 
-    if isinstance(value, str) and value.strip().casefold() == NOT_FOUND.casefold():
-        return None
-    if isinstance(value, list):
-        return [normalize_not_found(item) for item in value]
-    if isinstance(value, dict):
-        return {key: normalize_not_found(item) for key, item in value.items()}
     return value
 
 
 EXPLICIT_ALIASES: dict[str, tuple[str, ...]] = {
-    "total_premium": ("premium", "total premium", "premium amount", "annual premium"),
-    "total_sum_insured": ("total sum insured", "total sum inured", "overall sum insured"),
+    "total_premium": (
+        "premium",
+        "total premium",
+        "premium amount",
+        "annual premium",
+        "gross premium",
+    ),
+    "total_sum_insured": (
+        "total sum insured",
+        "total sum inured",
+        "overall sum insured",
+        "sum insured",
+    ),
     "policy_type": ("cover type", "coverage type", "type of policy"),
     "insurer_name": ("insurer", "insurance company", "insurance provider", "underwriter"),
     "tpa_name": ("tpa", "third party administrator", "third-party administrator"),
@@ -511,7 +834,6 @@ EXPLICIT_ALIASES: dict[str, tuple[str, ...]] = {
     "infertility_surrogacy": ("infertility and surrogacy", "surrogacy cover"),
     "corporate_buffer_limit": ("corporate buffer", "corporate floater sum insured", "buffer limit"),
     "disease_wise_capping": ("disease wise cap", "disease-wise cap", "disease capping"),
-    "limit": ("amount", "coverage amount", "maximum amount"),
 }
 
 
@@ -586,7 +908,7 @@ def normalize_payload_values(
     expected_fields: Sequence[str],
     alias_mappings: dict[str, dict[str, int]] | None = None,
 ) -> dict[str, Any]:
-    """Normalise dates, enum synonyms, and benefit shorthand before validation."""
+    """Normalise dates and coerce flat text values before validation."""
 
     model_hints = get_type_hints(GMCPPolicy)
     normalized: dict[str, Any] = {}
@@ -609,27 +931,27 @@ def _normalize_value(
     if annotation is None:
         return value
 
-    if annotation is str and isinstance(value, (int, float)):
-        return str(value)
-    if annotation is str and isinstance(value, list):
-        return "; ".join(str(item) for item in value)
-
-    if _is_benefit_model(annotation) and isinstance(value, str):
-        logger.warning(
-            "Wrapped bare benefit string at %s as Covered with the string as its limit.",
-            path,
-        )
-        return {"status": "Covered", "limit": value, "notes": None}
+    if annotation is str:
+        if value is None:
+            return NOT_FOUND
+        if isinstance(value, (int, float)):
+            return str(value)
+        if isinstance(value, dict):
+            extracted = _first_string_value(value)
+            if extracted is not None:
+                logger.warning(
+                    "Coerced nested object to flat string for %s using value %r", path, extracted
+                )
+                return extracted
+            logger.warning("Coerced nested object to JSON string for %s", path)
+            return json.dumps(value, ensure_ascii=False, default=str)
+        if isinstance(value, list):
+            return "; ".join(str(item) for item in value)
+        return value
 
     if annotation is date and isinstance(value, str):
         parsed_date = _parse_policy_date(value, path)
         return parsed_date or value
-
-    if _is_waiting_status(annotation) and isinstance(value, str):
-        mapped_status = _map_waiting_status(value)
-        if mapped_status != value:
-            logger.warning("Mapped waiting-period status at %s: %r -> %r", path, value, mapped_status)
-        return mapped_status
 
     if isinstance(value, dict) and _is_model(annotation):
         return _normalize_model_dict(value, annotation, path, alias_mappings)
@@ -642,6 +964,24 @@ def _normalize_value(
         ]
 
     return value
+
+
+def _first_string_value(value: Any) -> str | None:
+    """Find the first non-empty string in a nested local-model response."""
+
+    if isinstance(value, str):
+        return value.strip() or None
+    if isinstance(value, dict):
+        for nested_value in value.values():
+            found = _first_string_value(nested_value)
+            if found is not None:
+                return found
+    elif isinstance(value, list):
+        for nested_value in value:
+            found = _first_string_value(nested_value)
+            if found is not None:
+                return found
+    return None
 
 
 def _normalize_model_dict(
@@ -672,18 +1012,6 @@ def _is_model(annotation: Any) -> bool:
     return isinstance(annotation, type) and issubclass(annotation, BaseModel)
 
 
-def _is_benefit_model(annotation: Any) -> bool:
-    from .schema import BenefitTerms
-
-    return _is_model(annotation) and issubclass(annotation, BenefitTerms)
-
-
-def _is_waiting_status(annotation: Any) -> bool:
-    from .schema import WaitingPeriodStatus
-
-    return annotation is WaitingPeriodStatus
-
-
 def _unwrap_optional(annotation: Any) -> Any:
     if get_origin(annotation) in (Union, UnionType):
         return next((arg for arg in get_args(annotation) if arg is not type(None)), None)
@@ -698,24 +1026,10 @@ def _parse_policy_date(value: str, path: str) -> str | None:
     cleaned = re.sub(r"\b(?:AM|PM)\b", " ", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\s+", " ", cleaned).strip(" ,;:-")
     try:
-        return date_parser.parse(cleaned, fuzzy=True).date().isoformat()
+        return date_parser.parse(cleaned, fuzzy=True, dayfirst=True).date().isoformat()
     except (ValueError, OverflowError, TypeError) as exc:
         logger.warning("Could not parse date at %s (%r): %s", path, value, exc)
         return None
-
-
-def _map_waiting_status(value: str) -> str:
-    normalized = re.sub(r"[\s_-]+", " ", value.strip().casefold())
-    mappings = {
-        "covered": "Applied",
-        "applicable": "Applied",
-        "not applicable": "Not Covered",
-        "not covered": "Not Covered",
-        "excluded": "Not Covered",
-        "waived": "Waived Off",
-        "waived off": "Waived Off",
-    }
-    return mappings.get(normalized, value)
 
 
 def _normalize_nested_keys(
@@ -727,7 +1041,10 @@ def _normalize_nested_keys(
         return value
     model_type = _nested_model_type(field_name)
     if model_type is None:
-        return value
+        return {
+            _freeform_key(str(key)): item
+            for key, item in value.items()
+        }
     expected = tuple(model_type.model_fields)
     return normalize_group_keys(value, expected, alias_mappings)
 
@@ -784,6 +1101,12 @@ def _canonical_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]", "", value.casefold())
 
 
+def _freeform_key(value: str) -> str:
+    """Normalize an untyped nested key while retaining readable separators."""
+
+    return re.sub(r"[^a-z0-9]+", "_", value.casefold()).strip("_")
+
+
 def detect_topics(text: str) -> set[str]:
     """Detect broad insurance concepts without relying on insurer-specific labels."""
 
@@ -828,3 +1151,13 @@ def _render_chunks(chunks: Sequence[DocumentChunk], max_characters: int) -> str:
 
 def _contains_any(text: str, keywords: Iterable[str]) -> bool:
     return any(re.search(rf"(?<!\w){re.escape(keyword.casefold())}(?!\w)", text.casefold()) for keyword in keywords)
+
+
+def _print_raw_response(group_name: str, raw_response: str | None, payload: Any) -> None:
+    """Emit sensitive model output only when explicitly debugging locally."""
+
+    if os.environ.get("DEBUG"):
+        print(
+            f"RAW RESPONSE [{group_name}]: "
+            + (raw_response or json.dumps(payload, ensure_ascii=False, default=str))
+        )

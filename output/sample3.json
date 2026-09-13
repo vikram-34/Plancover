@@ -1,50 +1,105 @@
 {
-  "insurer_name": null,
+  "insurer_name": "Niva Bupa Health Insurance Company Limited",
   "tpa_name": null,
+  "extraction_status": "succeeded",
+  "extraction_evidence": {
+    "policy_type": [
+      {
+        "page": 3,
+        "snippet": "itial Waiting Period\nGSTI No.:09AAFCM7916H1Z6\nNiva Bupa State Code :\nCustomer State Code\nCustomer GSTI No. : \nCover Type (Individual/Floater)\nFloater\nBasic Details\nFamily Structure\nTotal no of employees/Primary Members\nTotal no of"
+      }
+    ],
+    "total_premium": [
+      {
+        "page": 1,
+        "snippet": "essing our services: \n  \n \n- \nEmployee & dependent personalized health card. \n- \nCertificate of Insurance \n- \nPremium Receipt \n- \nBenefits of the policy (Annexure) \n- \nTerms & conditions of the policy. \n- \nEmployee & dependent"
+      },
+      {
+        "page": 3,
+        "snippet": "licy inception date\nDate and time of Policy commencement\nDate and time of Policy expiry\nAggregate Sum Insured\nPremium Payment Frequency\nFree look Period\nAgent name\nAgent code\nAgent contact number\nClaims Administrator\nS.No\n1\n2\n3"
+      },
+      {
+        "page": 4,
+        "snippet": "| Website: www.nivabupa.com \n \nTel.:+ 91-11-30902000, Fax No.: + 91- 011-30902010 \n \n \nHospitalization Cover Premium (Rs.)\nFixed Benefit coverage for named Illness Premium (Rs.)\nHospital Cash Benefit Premium (Rs.)\nOPD Treatmen"
+      }
+    ],
+    "total_sum_insured": [
+      {
+        "page": 3,
+        "snippet": "ber\nFirst Policy inception date\nDate and time of Policy commencement\nDate and time of Policy expiry\nAggregate Sum Insured\nPremium Payment Frequency\nFree look Period\nAgent name\nAgent code\nAgent contact number\nClaims Administrator\nS."
+      },
+      {
+        "page": 5,
+        "snippet": "rugram-122011(Haryana) | Website: www.nivabupa.com \n \nTel.:+ 91-11-30902000, Fax No.: + 91- 011-30902010 \n \n \nSum Insured\n500000\nAge Band\nBand A\n0-2 yrs\n    1,819.60 \n3-17 yrs\n    1,819.60 \n18-25 yrs\n    3,035.83 \n26-30 yrs\n    3,2"
+      },
+      {
+        "page": 6,
+        "snippet": "29AAKCM7499N2Z7\nPremium Receipt\nPolicy Holder’s Name :Myndloop Tech Private \nLimited\nPolicy Number \nAggregate Sum Insured (Rs.\nUpon issuance of this receipt, all previously issued temporary receipts, if any, related to this policy"
+      }
+    ],
+    "family_structure": [
+      {
+        "page": 3,
+        "snippet": "a State Code :\nCustomer State Code\nCustomer GSTI No. : \nCover Type (Individual/Floater)\nFloater\nBasic Details\nFamily Structure\nTotal no of employees/Primary Members\nTotal no of Insured Members\n9\n29AAKCM7499N2Z7\n29\nAnually\n15 Days\nHii In"
+      }
+    ],
+    "room_rent": [
+      {
+        "page": 3,
+        "snippet": "00001\nNA\nSAC Code/ Type of Service : 997133 / General Insurance Services\nGST Details\nHospital Accommodation – Room rent/day & ICU/day\nCorporate Floater\nNot Covered\n1%\nPolicy Document – Health Plus\n01-August-2023\n31-July-2024\n4500"
+      }
+    ],
+    "maternity": [
+      {
+        "page": 3,
+        "snippet": "ered upto Sum Insured for 30 days\nCovered upto Sum Insured for 60 days\nNormal\nINR 1000 per hospitalization\n1. Maternity Expenses Benefit is available for Employees or Spouse only if both are covered in Insured members data receiv"
+      }
+    ],
+    "waiting_periods": [
+      {
+        "page": 3,
+        "snippet": "s Surgery / Mental illness covered\n7. External congenital disease coverage in life threatening situation only\nWaiting Periods\nWaived Off\nWaived Off\nWaived Off\nNA\nNot Covered\nHaemorrhoidectomy including Cost of stapler- 40000, Haemorrho"
+      }
+    ],
+    "ambulance": [
+      {
+        "page": 3,
+        "snippet": "sted Day Care Treatment \nPre Hospitalization Medical Expenses\nPost Hospitalization Medical Expenses\nEmergency Ambulance\nPre & Post Natal Expenses\nCorporate Floater Limit\nCorporate Floater utilization/family\nList of Critical Illne"
+      }
+    ],
+    "disease_wise_capping": [
+      {
+        "page": 3,
+        "snippet": "Corporate Floater Limit\nCorporate Floater utilization/family\nList of Critical Illness\nOPD Coverage\nCo-payment\nDisease wise capping\nPre-Existing Disease (PED)\n2 yr exclusions (Disease Specific Exclusions)\nInitial Waiting Period\nGSTI No.:09AA"
+      }
+    ]
+  },
   "policy_period": {
-    "start_date": null,
-    "end_date": null
+    "start_date": "2023-08-01",
+    "end_date": "2024-07-31"
   },
-  "tenure": null,
-  "policy_type": null,
-  "total_premium": null,
-  "total_sum_insured": null,
-  "previous_year_premium": null,
+  "tenure": "1 Year",
+  "policy_type": "Floater",
+  "total_premium": "98,476",
+  "total_sum_insured": "4500000.00",
+  "previous_year_premium": "Not Found",
   "family_structure": {
-    "employee": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "spouse": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "children": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents_in_law": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    }
+    "employee": "Covered under family structure (Employee, Spouse and Kids)",
+    "spouse": "Covered under family structure (Employee, Spouse and Kids)",
+    "children": "Covered under family structure (Employee, Spouse and Kids)",
+    "parents": "Not Found",
+    "parents_in_law": "Not Found"
   },
-  "sum_insured_tiers": [],
+  "sum_insured_tiers": [
+    {
+      "name": "Not Found",
+      "amount": "INR 5 Lakhs",
+      "eligible_members": "Employee, Spouse and Kids",
+      "notes": "Not Found"
+    }
+  ],
   "demographics_counts": {
-    "employees": null,
+    "employees": 9,
     "spouses": null,
     "children": null,
     "parents": null,
@@ -52,169 +107,49 @@
     "male": null,
     "female": null,
     "other": null,
-    "notes": null
+    "notes": "Not Found"
   },
-  "total_lives_covered": null,
-  "room_rent": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
-  "icu_charges": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
+  "total_lives_covered": 20,
+  "room_rent": "Normal",
+  "icu_charges": "ICU",
   "hospitalization_periods": {
-    "pre_hospitalization_days": null,
-    "post_hospitalization_days": null,
-    "notes": null
+    "pre_hospitalization_days": 30,
+    "post_hospitalization_days": 60,
+    "notes": "Covered upto Sum Insured for 30 days pre-hospitalization and 60 days post-hospitalization."
   },
   "maternity": {
-    "waiting_period_status": null,
-    "waiting_period_conditions": null,
-    "baby_day_one_cover": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "vaccination_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "normal_delivery_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "c_section_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "notes": null
+    "waiting_period_status": "Not Found",
+    "waiting_period_conditions": "Not Found",
+    "baby_day_one_cover": "New born baby covered from date of delivery provided endorsement is received within 90 days of delivery.",
+    "vaccination_coverage": "Not Found",
+    "normal_delivery_limits": "25,000",
+    "c_section_limits": "35,000",
+    "notes": "Available for Employees or Spouse only if both are covered. Claimable maximum 2 times/pregnancies. Pre & Post Natal Expenses covered within Maternity Expenses capped at INR 5000 for IPD only."
   },
   "waiting_periods": {
-    "initial_30_day": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "first_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "second_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "pre_existing_disease": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    }
+    "initial_30_day": "Waived Off",
+    "first_year": "Not Found",
+    "second_year": "Waived Off",
+    "pre_existing_disease": "Waived Off"
   },
   "other_benefits": {
-    "day_care": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "opd": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "teleconsultation": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "pharmacy_discount": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "domiciliary_hospitalization": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "annual_health_checkup": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "modern_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "bariatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "psychiatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "ayush_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "lgbtq_plus_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "live_in_partner_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "organ_donor_expenses": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    }
+    "day_care": "Covered up to Sum Insured for Listed Day Care Treatment; Lucentis / Avastin covered on day care up to INR 50,000 per family",
+    "opd": "Not Covered",
+    "teleconsultation": "Not Found",
+    "pharmacy_discount": "Not Found",
+    "domiciliary_hospitalization": "Not Found",
+    "annual_health_checkup": "Not Found",
+    "modern_treatment": "50% co-pay for cyberknife treatment / Robotic Surgery / Bio-absorbabLe Stent / FAMETO Laser Suregry / Toric lens / KT Laser Prostate",
+    "bariatric_treatment": "Not Found",
+    "psychiatric_treatment": "Psychiatric Ailments / Functional Endoscopic Sinus Surgery / Mental illness covered",
+    "ayush_treatment": "Not Found",
+    "lgbtq_plus_coverage": "Not Found",
+    "live_in_partner_coverage": "Not Found",
+    "organ_donor_expenses": "Not Found"
   },
-  "infertility_surrogacy": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "air_ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "corporate_buffer_limit": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "disease_wise_capping": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  }
+  "infertility_surrogacy": "Not Found",
+  "ambulance": "Emergency Ambulance covered up to INR 1000 per hospitalization",
+  "air_ambulance": "Not Found",
+  "corporate_buffer_limit": "Corporate Floater: Not Covered; Corporate Floater Limit: 1%, Corporate Floater utilization/family: 2%",
+  "disease_wise_capping": "Haemorrhoidectomy including Cost of stapler- 40000, Haemorrhoidectomy and Fissurectomy in a single sitting-35000, Cholecystectomy- 35000, Hernioplasty/Herniorraphy- Unilateral including cost of mesh and tacker- 45000, Hernioplasty/Herniorraphy- Bilateral including Cost of mesh and tacker-50000, URS (therapeutic) Including cost of laser treatment-35000, PCNL- Unilateral-50000, PCNL- Bilateral-60000, Hydrocele-25000,Appendicectomy-45000, Cataract per eye including Cost of Lens-25000, Hysterectomy (Abdominal/Vaginal)-55000, Total Knee Replacement(Unilateral) including cost of implants-100000, Total Knee Replacement (Bilateral) including cost of implants-150000, Hip Replacement (Unilateral) including cost of implants-100000, Hip Replacement (Bilateral) including cost of implants-150000"
 }

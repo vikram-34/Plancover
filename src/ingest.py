@@ -14,6 +14,13 @@ from typing import Optional
 import pymupdf
 import pdfplumber
 
+try:
+    import pytesseract
+    from PIL import Image
+except ImportError:  # OCR is optional for text-native PDFs.
+    pytesseract = None
+    Image = None
+
 
 logger = logging.getLogger(__name__)
 
@@ -48,12 +55,12 @@ class IngestionResult:
         return sum(len(page.raw_text) for page in self.pages)
 
 
-def ingest_pdf(pdf_path: str | Path) -> IngestionResult:
+def ingest_pdf(pdf_path: str | Path, *, enable_ocr: bool = True, ocr_dpi: int = 200) -> IngestionResult:
     """Extract page text with PyMuPDF and tables with pdfplumber.
 
-    When PyMuPDF yields no text for a page, pdfplumber is tried as a fallback.
-    A truly image-only/scanned page will still need a later OCR step; it is
-    returned with empty text so callers can detect it without losing its tables.
+    When PyMuPDF yields no text for a page, pdfplumber and then optional OCR are
+    tried as fallbacks. OCR is only run for pages that have no text, keeping
+    normal text-native PDFs fast.
     """
 
     path = Path(pdf_path)
@@ -80,6 +87,9 @@ def ingest_pdf(pdf_path: str | Path) -> IngestionResult:
                 logger.info("Page %s has no PyMuPDF text; trying pdfplumber fallback.", page_number)
                 raw_text = (plumber_page.extract_text() or "").strip()
 
+            if not raw_text and enable_ocr:
+                raw_text = _ocr_page(pymupdf_page, page_number, ocr_dpi)
+
             tables: list[Table] = plumber_page.extract_tables() or []
             if tables:
                 logger.info("Page %s contains %s table(s).", page_number, len(tables))
@@ -93,6 +103,29 @@ def ingest_pdf(pdf_path: str | Path) -> IngestionResult:
             )
 
     return IngestionResult(pages=pages)
+
+
+def _ocr_page(page: pymupdf.Page, page_number: int, dpi: int) -> str:
+    """OCR one image-only page, returning empty text when OCR is unavailable."""
+
+    if pytesseract is None or Image is None:
+        logger.warning(
+            "Page %s is image-only but OCR dependencies are not installed; "
+            "install pillow and pytesseract plus the Tesseract executable.",
+            page_number,
+        )
+        return ""
+    if dpi < 72:
+        raise ValueError("ocr_dpi must be at least 72")
+
+    try:
+        pixmap = page.get_pixmap(dpi=dpi, alpha=False)
+        image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
+        text = pytesseract.image_to_string(image)
+    except Exception as exc:
+        logger.warning("OCR failed for page %s: %s", page_number, exc)
+        return ""
+    return text.strip()
 
 
 def main() -> None:

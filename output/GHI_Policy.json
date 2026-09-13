@@ -1,50 +1,123 @@
 {
-  "insurer_name": null,
+  "insurer_name": "Care Health Insurance Limited",
   "tpa_name": null,
+  "extraction_status": "succeeded",
+  "extraction_evidence": {
+    "policy_period": [
+      {
+        "page": 1,
+        "snippet": "- Group Care 360\n Policy No\n 39899400\n Name of Policyholder\n MUKUNDA FOODS PVT LTD\n Cover type\n Main Floater\n Policy Period - Start Date\n 00:00 hrs 17-Mar-2022\n Policy Period - End Date\n Midnight 16-Mar-2023\n MUKUNDA FOODS PVT LTD\ngr"
+      },
+      {
+        "page": 3,
+        "snippet": "eption of the Policy. \nMid-term inclusion of only Child by birth and Spouse after marriage falling during the Policy period is allowed.\n3. Definition - Mental Illness means a substantial disorder of thinking, mood, perception, orient"
+      }
+    ],
+    "policy_type": [
+      {
+        "page": 1,
+        "snippet": "°\nPolicy Certificate - Group Care 360\n Policy No\n 39899400\n Name of Policyholder\n MUKUNDA FOODS PVT LTD\n Cover type\n Main Floater\n Policy Period - Start Date\n 00:00 hrs 17-Mar-2022\n Policy Period - End Date\n Midnight 16-Mar-2"
+      },
+      {
+        "page": 2,
+        "snippet": "Indemnity Policy \"Annexure B under Know \nyour policy Better\"\n \nDetails of Benefits and Optional Extensions\n1. Policy type : Non selective\n2. Family Structure : \nSelf + Spouse + 4 Dependent children\n3. Age Limit: Child age up to 25"
+      }
+    ],
+    "total_premium": [
+      {
+        "page": 1,
+        "snippet": "Bangalore-560068\nKARNATAKA\nGSTN : 29AAHCM9628G1ZZ\nSTATE CODE : 29\nPremium Details\nPremium\nCGST\nIGST\nSGST\nUGST\nTotal Premium\nPremium Payment Mode\n  461,699\n  41552.86\n  0\n  41552.86\n  0\n  544,804\n  ANNUAL PREMIUM\n`\n`\n`\n`\n`\n`\nDetails o"
+      },
+      {
+        "page": 3,
+        "snippet": "usness,\nburns of more than 40%,\ninjury requiring artificial ventilator support plus Vertebral Column Injury\n \nPremium per life Excluding tax:\n \n \nAge Band/SI\n200000\n0-35\n2809.6\n36-45\n3645.11\n46-55\n6729.63\n56-65\n11592.93\n66-70\n2"
+      },
+      {
+        "page": 4,
+        "snippet": "81N1ZO \nIRDA Registration Number - 148 \nUIN :  RHIHLGP20126V011920 CIN – U66000DL2007PLC161503\nNote:\n*In case premium is paid (partly/fully) by the Insured Member, the same shall be eligible for deduction u/s 80D of Income tax"
+      }
+    ],
+    "total_sum_insured": [
+      {
+        "page": 1,
+        "snippet": "ts\n66\nTotal\n152\nFor details of each insured refer to “Annexure A”\nDetails of Cover\nS No.\nParticulars\nAmount\n1\nTotal Sum Insured\n  17,200,000\n`\nIntermediary Details\nName\nCode\nContact Number\nRADHA RAVI gps\n20218860\n9901679750\nfor Claims &"
+      },
+      {
+        "page": 2,
+        "snippet": "Benefits\nS. No.\nParticulars\nDetails\n1\nIn-patient Care\nFlat Sum insured\nRoom Rent\nSum Insured\nMaximum eligibility for Normal Hospitalization\nMaximum eligibility for ICU Hospitalizat"
+      },
+      {
+        "page": 3,
+        "snippet": "for the treatment of the Critical Illness named below only, after the exhausting the family floater Sum Insured as covered under the \npolicy. The Company shall provide additional Sum Insured over and above family floater"
+      }
+    ],
+    "family_structure": [
+      {
+        "page": 2,
+        "snippet": "der Know \nyour policy Better\"\n \nDetails of Benefits and Optional Extensions\n1. Policy type : Non selective\n2. Family Structure : \nSelf + Spouse + 4 Dependent children\n3. Age Limit: Child age up to 25 years and Employee/Spouse age up \nto"
+      },
+      {
+        "page": 3,
+        "snippet": "otion) is allowed, but in case of claims it will not be \napplicable.\n2. If Dependents are to be covered under Family Structure, then the same needs to be declared at the time of inception of the Policy. \nMid-term inclusion of only Child"
+      }
+    ],
+    "room_rent": [
+      {
+        "page": 2,
+        "snippet": "Benefits\nS. No.\nParticulars\nDetails\n1\nIn-patient Care\nFlat Sum insured\nRoom Rent\nSum Insured\nMaximum eligibility for Normal Hospitalization\nMaximum eligibility for ICU Hospitalization\nRs. 20"
+      }
+    ],
+    "maternity": [
+      {
+        "page": 2,
+        "snippet": "rs.\nPre & Post Hospitalization\n1. Pre & Post Hospitalization is covered for 30 days and 60 days respectively.\nMaternity\n1. Maximum Limit for Maternity claims is Rs. 75,000 for Normal and Rs. 75,000 for LSCS\n.\n2. Maternity Expense"
+      }
+    ],
+    "other_benefits": [
+      {
+        "page": 2,
+        "snippet": "covered.\n6. New Born Baby covered from day one within family floater Sum Insured applicable to the Employee.\nOther Benefits\n1. Ambulance charges payable up to a maximum amount of Rs. 1,000/- per claim.\n2. Modern treatments, psychiatr"
+      }
+    ],
+    "ambulance": [
+      {
+        "page": 2,
+        "snippet": "orn Baby covered from day one within family floater Sum Insured applicable to the Employee.\nOther Benefits\n1. Ambulance charges payable up to a maximum amount of Rs. 1,000/- per claim.\n2. Modern treatments, psychiatric treatments"
+      }
+    ],
+    "corporate_buffer_limit": [
+      {
+        "page": 2,
+        "snippet": "t includes overall cost of kit including mask, gloves, head and shoe cover, face shield and coverall suit. \n \nCorporate Floater Sum Insured\n \nWe shall reimburse the Insured Person such usual and necessary medical expense incurred in-hospital for a p"
+      }
+    ]
+  },
   "policy_period": {
-    "start_date": null,
-    "end_date": null
+    "start_date": "2022-03-17",
+    "end_date": "2023-03-16"
   },
-  "tenure": null,
-  "policy_type": null,
-  "total_premium": null,
-  "total_sum_insured": null,
-  "previous_year_premium": null,
+  "tenure": "1 Year",
+  "policy_type": "Non selective",
+  "total_premium": "544,804",
+  "total_sum_insured": "17,200,000",
+  "previous_year_premium": "Not Found",
   "family_structure": {
-    "employee": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "spouse": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "children": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents_in_law": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    }
+    "employee": "Covered (Age limit 18-80 years)",
+    "spouse": "Covered (Age limit 18-80 years)",
+    "children": "Covered up to 4 dependent children (Age limit up to 25 years)",
+    "parents": "Not Found",
+    "parents_in_law": "Not Found"
   },
-  "sum_insured_tiers": [],
+  "sum_insured_tiers": [
+    {
+      "name": "Flat Sum Insured",
+      "amount": "Rs. 200,000",
+      "eligible_members": "Self + Spouse + 4 Dependent children",
+      "notes": "Not Found"
+    }
+  ],
   "demographics_counts": {
-    "employees": null,
+    "employees": 86,
     "spouses": null,
     "children": null,
     "parents": null,
@@ -52,169 +125,49 @@
     "male": null,
     "female": null,
     "other": null,
-    "notes": null
+    "notes": "66 Dependents"
   },
-  "total_lives_covered": null,
-  "room_rent": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
-  "icu_charges": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
+  "total_lives_covered": 152,
+  "room_rent": "No Limit",
+  "icu_charges": "No Limit",
   "hospitalization_periods": {
-    "pre_hospitalization_days": null,
-    "post_hospitalization_days": null,
-    "notes": null
+    "pre_hospitalization_days": 30,
+    "post_hospitalization_days": 60,
+    "notes": "Pre & Post Hospitalization is covered for 30 days and 60 days respectively."
   },
   "maternity": {
-    "waiting_period_status": null,
-    "waiting_period_conditions": null,
-    "baby_day_one_cover": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "vaccination_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "normal_delivery_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "c_section_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "notes": null
+    "waiting_period_status": "Waived",
+    "waiting_period_conditions": "9 month waiting period in respect of maternity claims waived for all Insured Members.",
+    "baby_day_one_cover": "New Born Baby covered from day one within family floater Sum Insured applicable to the Employee.",
+    "vaccination_coverage": "Not Found",
+    "normal_delivery_limits": "Rs. 75,000",
+    "c_section_limits": "Rs. 75,000",
+    "notes": "Maternity Expenses Benefit is available for Employees or Spouse Only if covered in data. Maternity claim is payable for first two dependent children only. Pre & Post natal expenses are not covered."
   },
   "waiting_periods": {
-    "initial_30_day": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "first_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "second_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "pre_existing_disease": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    }
+    "initial_30_day": "Waived off for existing members and new joinees.",
+    "first_year": "Waived off for all Insured Members.",
+    "second_year": "Waived off for all Insured Members.",
+    "pre_existing_disease": "Covered for existing members and new joinees."
   },
   "other_benefits": {
-    "day_care": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "opd": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "teleconsultation": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "pharmacy_discount": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "domiciliary_hospitalization": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "annual_health_checkup": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "modern_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "bariatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "psychiatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "ayush_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "lgbtq_plus_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "live_in_partner_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "organ_donor_expenses": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    }
+    "day_care": "Covered as per List of Day Care procedure attached under Annexure A",
+    "opd": "Not Found",
+    "teleconsultation": "Not Found",
+    "pharmacy_discount": "Not Found",
+    "domiciliary_hospitalization": "Specifically excluded",
+    "annual_health_checkup": "Not Found",
+    "modern_treatment": "Covered as per terms and conditions upto 50% of the Sum Insured",
+    "bariatric_treatment": "Bariatric Surgery covered under the policy as per terms and conditions upto 50% of the Sum Insured",
+    "psychiatric_treatment": "Covered under the policy as per terms and conditions upto 50% of the Sum Insured",
+    "ayush_treatment": "Not Found",
+    "lgbtq_plus_coverage": "Not Found",
+    "live_in_partner_coverage": "Not Found",
+    "organ_donor_expenses": "Not Found"
   },
-  "infertility_surrogacy": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "air_ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "corporate_buffer_limit": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "disease_wise_capping": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  }
+  "infertility_surrogacy": "Excluded (Infertility & related ailments including male sterility are outside the scope of this policy)",
+  "ambulance": "Payable up to a maximum amount of Rs. 1,000/- per claim",
+  "air_ambulance": "Not Found",
+  "corporate_buffer_limit": "Corporate Floater aggregate liability shall not exceed Rs. 5 LAKH for all Insured members for specified Critical Illnesses",
+  "disease_wise_capping": "Not Found"
 }

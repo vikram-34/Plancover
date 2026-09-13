@@ -6,7 +6,7 @@ import argparse
 import logging
 from pathlib import Path
 
-from src.pipeline import process_folder
+from src.pipeline import process_path
 
 
 def main() -> None:
@@ -16,7 +16,7 @@ def main() -> None:
         nargs="?",
         type=Path,
         default=Path("sample_docs"),
-        help="Folder containing policy PDFs (default: sample_docs)",
+        help="A policy PDF or folder containing PDFs (default: sample_docs)",
     )
     parser.add_argument(
         "--output-dir",
@@ -27,9 +27,10 @@ def main() -> None:
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    batch = process_folder(args.pdf_folder, args.output_dir)
+    batch = process_path(args.pdf_folder, args.output_dir)
     print(
         f"Completed: {batch.succeeded_count} succeeded, "
+        f"{batch.low_quality_count} low_quality, "
         f"{batch.failed_count} failed, {len(batch.files)} total."
     )
     print("Alias mappings used:")

@@ -1,50 +1,123 @@
 {
-  "insurer_name": null,
+  "insurer_name": "Care Health Insurance Ltd.",
   "tpa_name": null,
+  "extraction_status": "succeeded",
+  "extraction_evidence": {
+    "policy_period": [
+      {
+        "page": 1,
+        "snippet": "360\n Policy No\n 41201895\n Name of Policyholder\n AAYUV TECHNOLOGIES\nPRIVATE LIMITED\n Cover type\n Main Floater\n Policy Period - Start Date\n 00:00 hrs 02-Apr-2022\n Policy Period - End Date\n Midnight 01-Apr-2023\n AAYUV TECHNOLOGIES PRIVA"
+      },
+      {
+        "page": 3,
+        "snippet": "eption of the Policy. \nMid-term inclusion of only Child by birth and Spouse after marriage falling during the Policy period is allowed.\n3. Definition - Mental Illness means a substantial disorder of thinking, mood, perception, orient"
+      }
+    ],
+    "policy_type": [
+      {
+        "page": 1,
+        "snippet": "Certificate - Group Care 360\n Policy No\n 41201895\n Name of Policyholder\n AAYUV TECHNOLOGIES\nPRIVATE LIMITED\n Cover type\n Main Floater\n Policy Period - Start Date\n 00:00 hrs 02-Apr-2022\n Policy Period - End Date\n Midnight 01-Apr-2"
+      },
+      {
+        "page": 2,
+        "snippet": "Indemnity Policy \"Annexure B under Know \nyour policy Better\"\n \nDetails of Benefits and Optional Extensions\n1. Policy type : Non selective\n2. Family Structure : \nSelf + Spouse + 2 Dependent children\n3. Age Limit: Child age up to 25"
+      }
+    ],
+    "total_premium": [
+      {
+        "page": 1,
+        "snippet": "GAR\n \nTELANGANA\n -500038\n \nGSTN : 36AAMCA9601N2Z6\nSTATE CODE : 36\nPremium Details\nPremium\nCGST\nIGST\nSGST\nUGST\nTotal Premium\nPremium Payment Mode\n  349,469\n  0\n  62904.39\n  0\n  0\n  412,373\n  ANNUAL PREMIUM\n`\n`\n`\n`\n`\n`\nDetails of Insur"
+      },
+      {
+        "page": 2,
+        "snippet": "t includes overall cost of kit including mask, gloves, head and shoe cover, face shield and coverall suit. \n \nPremium per life Excluding tax:"
+      },
+      {
+        "page": 4,
+        "snippet": "81N1ZS \nIRDA Registration Number - 148 \nUIN :  RHIHLGP20126V011920 CIN – U66000DL2007PLC161503\nNote:\n*In case premium is paid (partly/fully) by the Insured Member, the same shall be eligible for deduction u/s 80D of Income tax"
+      }
+    ],
+    "total_sum_insured": [
+      {
+        "page": 1,
+        "snippet": "ts\n32\nTotal\n147\nFor details of each insured refer to “Annexure A”\nDetails of Cover\nS No.\nParticulars\nAmount\n1\nTotal Sum Insured\n  51,900,000\n`\nIntermediary Details\nName\nCode\nContact Number\n Care Health Insurance Ltd.\nDirect\n1800-102-6655"
+      },
+      {
+        "page": 2,
+        "snippet": "Benefits\nS. No.\nParticulars\nDetails\n1\nIn-patient Care\nGraded Sum insured\nRoom Rent\nSum Insured\nMaximum eligibility for Normal Hospitalization\nMaximum eligibility for ICU Hospitalizat"
+      },
+      {
+        "page": 3,
+        "snippet": "& conditions are applicable unless specifically waived or amended under the policy. \n1. Mid -term increase in Sum insured due to change in level of the employee (promotion) is allowed, but in case of claims it will not be \napplicab"
+      }
+    ],
+    "family_structure": [
+      {
+        "page": 2,
+        "snippet": "der Know \nyour policy Better\"\n \nDetails of Benefits and Optional Extensions\n1. Policy type : Non selective\n2. Family Structure : \nSelf + Spouse + 2 Dependent children\n3. Age Limit: Child age up to 25 years and Employee/Spouse age up \nto"
+      },
+      {
+        "page": 3,
+        "snippet": "otion) is allowed, but in case of claims it will not be \napplicable.\n2. If Dependents are to be covered under Family Structure, then the same needs to be declared at the time of inception of the Policy. \nMid-term inclusion of only Child"
+      }
+    ],
+    "room_rent": [
+      {
+        "page": 2,
+        "snippet": "Benefits\nS. No.\nParticulars\nDetails\n1\nIn-patient Care\nGraded Sum insured\nRoom Rent\nSum Insured\nMaximum eligibility for Normal Hospitalization\nMaximum eligibility for ICU Hospitalization\nRs. 30"
+      }
+    ],
+    "maternity": [
+      {
+        "page": 2,
+        "snippet": "rs.\nPre & Post Hospitalization\n1. Pre & Post Hospitalization is covered for 30 days and 60 days respectively.\nMaternity\n1. Maximum Limit for Maternity claims is Rs. 50,000 for Normal and Rs. 50,000 for LSCS\n.\n2. Maternity Expense"
+      }
+    ],
+    "other_benefits": [
+      {
+        "page": 2,
+        "snippet": "Post natal expenses are not covered.\n6. New Born Baby covered from day one within family floater Sum Insured.\nOther Benefits\n1. Ambulance charges payable up to a maximum amount of Rs. 2,000/- per claim.\n2. Modern treatments, psychiatr"
+      }
+    ],
+    "ambulance": [
+      {
+        "page": 2,
+        "snippet": "s are not covered.\n6. New Born Baby covered from day one within family floater Sum Insured.\nOther Benefits\n1. Ambulance charges payable up to a maximum amount of Rs. 2,000/- per claim.\n2. Modern treatments, psychiatric treatments"
+      }
+    ]
+  },
   "policy_period": {
-    "start_date": null,
-    "end_date": null
+    "start_date": "2022-02-04",
+    "end_date": "2023-01-04"
   },
-  "tenure": null,
-  "policy_type": null,
-  "total_premium": null,
-  "total_sum_insured": null,
-  "previous_year_premium": null,
+  "tenure": "Not Found",
+  "policy_type": "Non selective",
+  "total_premium": "412,373",
+  "total_sum_insured": "51,900,000",
+  "previous_year_premium": "Not Found",
   "family_structure": {
-    "employee": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "spouse": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "children": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    },
-    "parents_in_law": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "maximum_members": null
-    }
+    "employee": "Covered under Self + Spouse + 2 Dependent children family structure, age up to 70 years",
+    "spouse": "Covered under Self + Spouse + 2 Dependent children family structure, age up to 70 years",
+    "children": "Covered under Self + Spouse + 2 Dependent children family structure, up to 2 dependent children, age up to 25 years",
+    "parents": "Not Found",
+    "parents_in_law": "Not Found"
   },
-  "sum_insured_tiers": [],
+  "sum_insured_tiers": [
+    {
+      "name": "Not Found",
+      "amount": "Rs. 300,000",
+      "eligible_members": "Not Found",
+      "notes": "Room rent limit 2% of Sum Insured per day for Normal Hospitalization and 4% of Sum Insured per day for ICU Hospitalization"
+    },
+    {
+      "name": "Not Found",
+      "amount": "Rs. 500,000",
+      "eligible_members": "Not Found",
+      "notes": "Room rent limit 2% of Sum Insured per day for Normal Hospitalization and 4% of Sum Insured per day for ICU Hospitalization"
+    }
+  ],
   "demographics_counts": {
-    "employees": null,
+    "employees": 115,
     "spouses": null,
     "children": null,
     "parents": null,
@@ -52,169 +125,49 @@
     "male": null,
     "female": null,
     "other": null,
-    "notes": null
+    "notes": "Primary Insured Members: 115, Dependents: 32"
   },
-  "total_lives_covered": null,
-  "room_rent": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
-  "icu_charges": {
-    "status": null,
-    "limit": null,
-    "notes": null,
-    "percent_of_sum_insured": null,
-    "max_limit": null
-  },
+  "total_lives_covered": 147,
+  "room_rent": "2% of Sum Insured per day",
+  "icu_charges": "4% of Sum Insured per day",
   "hospitalization_periods": {
-    "pre_hospitalization_days": null,
-    "post_hospitalization_days": null,
-    "notes": null
+    "pre_hospitalization_days": 30,
+    "post_hospitalization_days": 60,
+    "notes": "Pre & Post Hospitalization is covered for 30 days and 60 days respectively."
   },
   "maternity": {
-    "waiting_period_status": null,
-    "waiting_period_conditions": null,
-    "baby_day_one_cover": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "vaccination_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "normal_delivery_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "c_section_limits": {
-      "metro": null,
-      "non_metro": null,
-      "notes": null
-    },
-    "notes": null
+    "waiting_period_status": "Waived",
+    "waiting_period_conditions": "9 month waiting period in respect of maternity claims waived for all Insured Members.",
+    "baby_day_one_cover": "New Born Baby covered from day one within family floater Sum Insured.",
+    "vaccination_coverage": "Not Found",
+    "normal_delivery_limits": "Rs. 50,000",
+    "c_section_limits": "Rs. 50,000 for LSCS",
+    "notes": "Maternity Expenses Benefit is available for Employees or Spouse Only if covered in data, payable for first two dependent children only. Pre & Post natal expenses are not covered."
   },
   "waiting_periods": {
-    "initial_30_day": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "first_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "second_year": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    },
-    "pre_existing_disease": {
-      "status": null,
-      "limit": null,
-      "notes": null,
-      "conditions": null
-    }
+    "initial_30_day": "30 Days Wait Period condition is waived for existing members and new joinees.",
+    "first_year": "First year exclusion condition for specific diseases is waived for all Insured Members.",
+    "second_year": "Second year exclusion condition for specific diseases is waived for all Insured Members.",
+    "pre_existing_disease": "Pre-existing diseases are covered for existing members and new joinees."
   },
   "other_benefits": {
-    "day_care": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "opd": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "teleconsultation": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "pharmacy_discount": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "domiciliary_hospitalization": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "annual_health_checkup": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "modern_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "bariatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "psychiatric_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "ayush_treatment": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "lgbtq_plus_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "live_in_partner_coverage": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    },
-    "organ_donor_expenses": {
-      "status": null,
-      "limit": null,
-      "notes": null
-    }
+    "day_care": "Covered as per List of Day Care procedure attached as Annexure A under Know your policy Better",
+    "opd": "Not Found",
+    "teleconsultation": "Covered for Econsultation (General Physician)",
+    "pharmacy_discount": "Not Found",
+    "domiciliary_hospitalization": "Specifically excluded unless mentioned specifically",
+    "annual_health_checkup": "Not Found",
+    "modern_treatment": "Covered as per terms and conditions upto 50% of the Sum Insured",
+    "bariatric_treatment": "Covered under Bariatric Surgery as per terms and conditions upto 50% of the Sum Insured",
+    "psychiatric_treatment": "Covered as per terms and conditions upto 50% of the Sum Insured",
+    "ayush_treatment": "Not Found",
+    "lgbtq_plus_coverage": "Not Found",
+    "live_in_partner_coverage": "Not Found",
+    "organ_donor_expenses": "Not Found"
   },
-  "infertility_surrogacy": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "air_ambulance": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "corporate_buffer_limit": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  },
-  "disease_wise_capping": {
-    "status": null,
-    "limit": null,
-    "notes": null
-  }
+  "infertility_surrogacy": "Excluded; Infertility & related ailments including male sterility are outside the scope of this policy",
+  "ambulance": "Payable up to a maximum amount of Rs. 2,000/- per claim",
+  "air_ambulance": "Not Found",
+  "corporate_buffer_limit": "Not Found",
+  "disease_wise_capping": "Not Found"
 }

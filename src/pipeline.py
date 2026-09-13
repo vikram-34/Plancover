@@ -10,7 +10,7 @@ from typing import Optional
 
 from pydantic import ValidationError
 
-from .extractor import ExtractionResult, GMCExtractor
+from .extractor import ExtractionResult, GMCExtractor, populated_top_level_fields
 from .ingest import IngestionResult, ingest_pdf
 from .schema import GMCPPolicy
 
@@ -35,10 +35,19 @@ class FileProcessResult:
     warnings: list[str] = field(default_factory=list)
     alias_mappings: dict[str, dict[str, int]] = field(default_factory=dict)
     error: Optional[str] = None
+    quality_status: Optional[str] = None
 
     @property
     def succeeded(self) -> bool:
-        return self.output_path is not None and self.error is None
+        return (
+            self.output_path is not None
+            and self.error is None
+            and self.quality_status == "succeeded"
+        )
+
+    @property
+    def low_quality(self) -> bool:
+        return self.output_path is not None and self.error is None and self.quality_status == "low_quality"
 
 
 @dataclass
@@ -54,7 +63,11 @@ class BatchProcessResult:
 
     @property
     def failed_count(self) -> int:
-        return len(self.files) - self.succeeded_count
+        return sum(result.error is not None for result in self.files)
+
+    @property
+    def low_quality_count(self) -> int:
+        return sum(result.low_quality for result in self.files)
 
 
 def process_folder(
@@ -88,20 +101,71 @@ def process_folder(
     return batch
 
 
+def process_path(
+    pdf_source: str | Path,
+    output_folder: str | Path,
+    *,
+    extractor: GMCExtractor | None = None,
+) -> BatchProcessResult:
+    """Process either one PDF or every PDF in a directory."""
+
+    source_path = Path(pdf_source)
+    if source_path.is_dir():
+        return process_folder(source_path, output_folder, extractor=extractor)
+    if not source_path.is_file() or source_path.suffix.casefold() != ".pdf":
+        raise FileNotFoundError(f"PDF file or folder not found: {source_path}")
+
+    destination_dir = Path(output_folder)
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    active_extractor = extractor or GMCExtractor()
+    print(f"[1/1] Processing {source_path.name}")
+    result = process_pdf(source_path, destination_dir, active_extractor)
+    _print_file_result(result)
+    return BatchProcessResult(files=[result], alias_mappings=result.alias_mappings)
+
+
 def process_pdf(pdf_path: Path, output_folder: Path, extractor: GMCExtractor) -> FileProcessResult:
     """Ingest, detect parties, extract, validate, and save one policy PDF."""
 
     result = FileProcessResult(pdf_path=pdf_path)
     try:
         document = ingest_pdf(pdf_path)
-        detected_parties = detect_insurer_and_tpa(document)
+        try:
+            identified_parties = extractor.identify_insurer_tpa(document)
+            detected_parties = PartyDetection(
+                insurer_name=identified_parties["insurer"],
+                tpa_name=identified_parties["tpa"],
+            )
+        except Exception as exc:
+            message = f"Insurer/TPA LLM detection failed: {exc}"
+            logger.warning(message)
+            result.warnings.append(message)
+            detected_parties = PartyDetection()
         extraction = extractor.extract(document)
         result.warnings.extend(extraction.errors)
+        result.warnings.extend(extraction.warnings)
         result.alias_mappings = extraction.alias_mappings
 
         policy = _merge_detected_parties(extraction, detected_parties)
         if policy is None:
             raise ValueError("No valid policy JSON was produced; see validation warnings.")
+
+        populated, total = populated_top_level_fields(policy)
+        quality_status = _quality_status(policy, populated)
+        result.quality_status = quality_status
+        policy = policy.model_copy(
+            update={
+                "extraction_status": quality_status,
+                "extraction_evidence": extraction.evidence,
+            }
+        )
+        if quality_status == "low_quality":
+            message = (
+                f"LOW QUALITY: {populated}/{total} policy fields populated; "
+                "requires insurer_name, a financial term, a policy-period value, and at least 8 fields."
+            )
+            logger.warning(message)
+            result.warnings.append(message)
 
         output_path = output_folder / f"{pdf_path.stem}.json"
         output_path.write_text(policy.model_dump_json(indent=2), encoding="utf-8")
@@ -175,6 +239,8 @@ def _find_labelled_value(text: str, labels: tuple[str, ...]) -> Optional[str]:
 def _print_file_result(result: FileProcessResult) -> None:
     if result.succeeded:
         print(f"  Saved: {result.output_path}")
+    elif result.low_quality:
+        print(f"  Saved (low_quality): {result.output_path}")
     else:
         print(f"  Failed: {result.error}")
     for warning in result.warnings:
@@ -188,3 +254,21 @@ def _merge_alias_usage(
         destination_targets = destination.setdefault(source_key, {})
         for target, count in targets.items():
             destination_targets[target] = destination_targets.get(target, 0) + count
+
+
+def _quality_status(policy: GMCPPolicy, populated_fields: int) -> str:
+    """Classify a validated record without treating Pydantic defaults as evidence."""
+
+    has_insurer = bool(policy.insurer_name and policy.insurer_name.strip())
+    has_financial_term = bool(
+        (policy.total_premium and policy.total_premium.strip())
+        or (policy.total_sum_insured and policy.total_sum_insured.strip())
+    )
+    has_policy_period = bool(
+        policy.policy_period.start_date or policy.policy_period.end_date
+    )
+    return (
+        "succeeded"
+        if has_insurer and has_financial_term and has_policy_period and populated_fields >= 8
+        else "low_quality"
+    )
